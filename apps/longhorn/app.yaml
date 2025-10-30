@@ -2,28 +2,21 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: longhorn
-  namespace: argocd
+  namespace: argocd # Or your Argo CD namespace
 spec:
-  project: default
-  source:
-    repoURL: https://charts.longhorn.io
-    chart: longhorn
-    targetRevision: 1.7.3
-    helm:
-      values: |
-        defaultSettings:
-          defaultReplicaCount: 2
-          allowCollectingLonghornUsageMetrics: false
-        defaultDataPath: /var/lib/longhorn
-        persistence:
-          defaultClass: true
-          defaultFsType: ext4
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: longhorn-system
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  project: default
+  source:
+    chart: longhorn
+    repoURL: https://charts.longhorn.io/
+    targetRevision: v1.5.3 # Replace with your desired Longhorn version
+    helm:
+      # Add any custom values here, e.g., for enabling preUpgradeChecker
+      values: |
+        preUpgradeChecker:
+          jobEnabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system # The namespace where Longhorn will be installed
