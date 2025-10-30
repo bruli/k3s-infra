@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://charts.longhorn.io
     chart: longhorn
-    targetRevision: 1.7.x
+    targetRevision: 1.7.3
     helm:
       values: |
         defaultSettings:
