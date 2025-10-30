@@ -1,8 +1,7 @@
 defaultSettings:
-  defaultReplicaCount: 2
+  defaultReplicaCount: 1
   allowCollectingLonghornUsageMetrics: false
-
-defaultDataPath: /var/lib/longhorn
+  defaultDataPath: /var/lib/longhorn
 
 persistence:
   defaultClass: true
