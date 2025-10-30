@@ -10,8 +10,14 @@ spec:
     chart: longhorn
     targetRevision: 1.7.x
     helm:
-      valueFiles:
-        - values.yaml
+      values: |
+        defaultSettings:
+          defaultReplicaCount: 2
+          allowCollectingLonghornUsageMetrics: false
+        defaultDataPath: /var/lib/longhorn
+        persistence:
+          defaultClass: true
+          defaultFsType: ext4
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
@@ -19,5 +25,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  syncOptions:
+    syncOptions:
       - CreateNamespace=true
