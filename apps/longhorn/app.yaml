@@ -10,7 +10,7 @@ spec:
     chart: longhorn
     targetRevision: 1.6.2
     helm:
-      valuesObject:
+      values: |
           defaultSettings:
             defaultReplicaCount: 1
             allowCollectingLonghornUsageMetrics: false
