@@ -1,0 +1,9 @@
+defaultSettings:
+  defaultReplicaCount: 2
+  allowCollectingLonghornUsageMetrics: false
+
+defaultDataPath: /var/lib/longhorn
+
+persistence:
+  defaultClass: true
+  defaultFsType: ext4
