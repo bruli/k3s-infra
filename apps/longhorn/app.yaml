@@ -8,19 +8,17 @@ spec:
   source:
     repoURL: https://charts.longhorn.io
     chart: longhorn
-    targetRevision: 1.7.3
+    targetRevision: 1.6.2
     helm:
       values: |
         defaultSettings:
-          defaultReplicaCount: 2
-          allowCollectingLonghornUsageMetrics: false
         defaultDataPath: /var/lib/longhorn
-        persistence:
-          defaultClass: true
-          defaultFsType: ext4
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
   syncPolicy:
-    automated: { prune: true, selfHeal: true }
-    syncOptions: [ "CreateNamespace=true" ]
+    automated:
+        prune: true
+        selfHeal: true
+    syncOptions:
+        - "CreateNamespace=true"
