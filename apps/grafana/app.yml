@@ -7,12 +7,15 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://grafana.github.io/helm-charts
-    chart: grafana
-    targetRevision: 10.1.4
-    helm:
-      valueFiles:
-        - values.yml
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: grafana
+      targetRevision: 10.1.4
+      helm:
+        valueFiles:
+          - $values/apps/grafana/values.yml
+    - repoURL: https://github.com/bruli/k3s-infra.git
+      targetRevision: main
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana
