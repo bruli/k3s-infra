@@ -1,0 +1,22 @@
+args:
+  - --kubelet-insecure-tls
+  - --kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP
+  # Si tens problemes d’accés al port del kubelet, pots afegir:
+  # - --kubelet-use-node-status-port
+
+# hostNetwork pot ajudar en alguns entorns domèstics; per defecte el deixem a false.
+hostNetwork: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# Afinar tolerations si tens nodes taintats (opcional)
+# tolerations:
+#   - key: "node-role.kubernetes.io/master"
+#     effect: "NoSchedule"
+#     operator: "Exists"
