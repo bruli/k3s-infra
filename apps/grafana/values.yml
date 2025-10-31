@@ -6,7 +6,7 @@ service:
   type: NodePort
   nodePort: 32000
   port: 80
-  targetPort: grafana
+  targetPort: 3000
 
 # --- Persistència (PVC) ---
 persistence:
