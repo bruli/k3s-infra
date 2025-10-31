@@ -36,10 +36,10 @@ readinessProbe:
   httpGet:
     path: /api/health
     port: 3000
-  initialDelaySeconds: 40
+  initialDelaySeconds: 60
   periodSeconds: 10
   timeoutSeconds: 5
-  failureThreshold: 10
+  failureThreshold: 18
 
 livenessProbe:
   httpGet:
