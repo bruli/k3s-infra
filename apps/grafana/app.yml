@@ -8,36 +8,10 @@ spec:
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: grafana
-    targetRevision: 10.1.4
+    targetRevision: 10.1.34
     helm:
-      values: |
-        adminUser: "admin"
-        adminPassword: "changeme"
-        service:
-          type: NodePort
-          nodePort: 32000
-        persistence:
-          enabled: true
-          size: 1Gi
-        datasources:
-          datasources.yaml:
-            apiVersion: 1
-            datasources:
-              - name: Prometheus
-                type: prometheus
-                access: proxy
-                url: http://prometheus-server.prometheus.svc.cluster.local
-                isDefault: true
-        dashboards:
-          default:
-            k8s-metrics:
-              gnetId: 315
-              revision: 2
-              datasource: Prometheus
-            kube-state-metrics:
-              gnetId: 13332
-              revision: 1
-              datasource: Prometheus
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana
