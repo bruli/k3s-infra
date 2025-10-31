@@ -6,6 +6,7 @@
 #   passwordKey: admin-password
 
 # OPCIÓ B: en clar (per proves)
+
 adminUser: "admin"
 adminPassword: "changeme"
 
@@ -19,7 +20,7 @@ persistence:
   size: 2Gi
   storageClassName: local-path
 
-# Sidecars perquè s’autoprovisionin datasources i dashboards
+# Activa sidecars perquè es provis ionin automàticament
 sidecar:
   datasources:
     enabled: true
@@ -35,8 +36,8 @@ datasources:
       - name: Prometheus
         type: prometheus
         access: proxy
-        # Ajusta el port segons el teu Service (80 o 9090)
-        url: http://prometheus-server.prometheus.svc.cluster.local:80
+        # ⚠️ ajusta el port al pas 2 (80 o 9090)
+        url: http://prometheus-server.prometheus.svc.cluster.local:9090
         isDefault: true
 
 dashboardProviders:
@@ -52,71 +53,71 @@ dashboardProviders:
         options:
           path: /var/lib/grafana/dashboards/default
 
-dashboards:
-  default:
-    cluster-cpu-average:
-      json: |-
-        {
-          "id": null,
-          "uid": null,
-          "title": "Cluster CPU Average (5m)",
-          "schemaVersion": 38,
-          "version": 1,
-          "refresh": "10s",
-          "time": { "from": "now-15m", "to": "now" },
-          "panels": [
-            {
-              "type": "stat",
-              "title": "CPU Avg (cluster, 5m)",
-              "id": 1,
-              "datasource": "Prometheus",
-              "targets": [
-                {
-                  "refId": "A",
-                  "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))",
-                  "instant": true,
-                  "legendFormat": "avg %"
-                }
-              ],
-              "options": {
-                "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "textMode": "auto"
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "percent",
-                  "decimals": 1,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      { "color": "green", "value": null },
-                      { "color": "yellow", "value": 60 },
-                      { "color": "red", "value": 85 }
-                    ]
-                  }
-                },
-                "overrides": []
-              },
-              "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
-            },
-            {
-              "type": "timeseries",
-              "title": "CPU Avg (cluster over time)",
-              "id": 2,
-              "datasource": "Prometheus",
-              "targets": [
-                { "refId": "A", "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))", "instant": false }
-              ],
-              "fieldConfig": { "defaults": { "unit": "percent", "decimals": 1 }, "overrides": [] },
-              "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
-              "gridPos": { "h": 8, "w": 16, "x": 8, "y": 0 }
-            }
-          ]
-        }
+# dashboards:
+#   default:
+#     cluster-cpu-average:
+#       json: |-
+#         {
+#                   "id": null,
+#                   "uid": null,
+#                   "title": "Cluster CPU Average (5m)",
+#                   "schemaVersion": 38,
+#                   "version": 1,
+#                   "refresh": "10s",
+#                   "time": { "from": "now-15m", "to": "now" },
+#                   "panels": [
+#                     {
+#                       "type": "stat",
+#                       "title": "CPU Avg (cluster, 5m)",
+#                       "id": 1,
+#                       "datasource": "Prometheus",
+#                       "targets": [
+#                         {
+#                           "refId": "A",
+#                           "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))",
+#                           "instant": true,
+#                           "legendFormat": "avg %"
+#                         }
+#                       ],
+#                       "options": {
+#                         "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+#                         "colorMode": "value",
+#                         "graphMode": "none",
+#                         "justifyMode": "auto",
+#                         "orientation": "auto",
+#                         "textMode": "auto"
+#                       },
+#                       "fieldConfig": {
+#                         "defaults": {
+#                           "unit": "percent",
+#                           "decimals": 1,
+#                           "thresholds": {
+#                             "mode": "absolute",
+#                             "steps": [
+#                               { "color": "green", "value": null },
+#                               { "color": "yellow", "value": 60 },
+#                               { "color": "red", "value": 85 }
+#                             ]
+#                           }
+#                         },
+#                         "overrides": []
+#                       },
+#                       "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
+#                     },
+#                     {
+#                       "type": "timeseries",
+#                       "title": "CPU Avg (cluster over time)",
+#                       "id": 2,
+#                       "datasource": "Prometheus",
+#                       "targets": [
+#                         { "refId": "A", "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))", "instant": false }
+#                       ],
+#                       "fieldConfig": { "defaults": { "unit": "percent", "decimals": 1 }, "overrides": [] },
+#                       "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+#                       "gridPos": { "h": 8, "w": 16, "x": 8, "y": 0 }
+#                     }
+#                   ]
+#                 }
 
     node-exporter-full:
       gnetId: 1860
@@ -127,3 +128,4 @@ dashboards:
       gnetId: 13332
       revision: 1
       datasource: Prometheus
+
