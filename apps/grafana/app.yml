@@ -4,20 +4,25 @@ metadata:
   name: grafana
   namespace: argocd
 spec:
-  project: default
+  destination:
+    namespace: grafana
+    server: https://kubernetes.default.svc
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: grafana
     targetRevision: 10.1.4
     helm:
-      valueFiles:
-        - values.yaml
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: grafana
+      values: |-
+        service:
+          type: NodePort
+          port: 80
+          targetPort: 3000
+          nodePort: 32000
+        # (la resta dels teus valors: adminUser, adminPassword, persistence, datasources, dashboards, etc.)
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
