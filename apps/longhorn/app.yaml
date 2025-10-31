@@ -14,7 +14,7 @@ spec:
       values: |
         defaultSettings:
           defaultReplicaCount: "2"
-          allowCollectingLonghornUsageMetrics: false
+          allowCollectingLonghornUsageMetrics: "false"
           defaultDataPath: /var/lib/longhorn
         persistence:
           defaultClass: true

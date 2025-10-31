@@ -5,7 +5,8 @@ server:
   persistentVolume:
     enabled: true
     size: 2Gi
-    storageClass: longhorn
+#     storageClass: longhorn
+    storageClass: local-path
   service:
     type: ClusterIP
   global:
