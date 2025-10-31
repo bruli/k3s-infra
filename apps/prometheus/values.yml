@@ -1,0 +1,33 @@
+alertmanager:
+  enabled: true
+
+server:
+  persistentVolume:
+    enabled: true
+    size: 2Gi
+    storageClass: longhorn
+  service:
+    type: ClusterIP
+  global:
+    scrape_interval: 15s
+    evaluation_interval: 30s
+  serverFiles:
+    prometheus.yml:
+      scrape_configs:
+        # Scrape de kube-state-metrics (Bitnami / chart oficial exposa a 8080)
+        - job_name: 'kube-state-metrics'
+          static_configs:
+            - targets:
+                - 'kube-state-metrics.kube-system.svc.cluster.local:8080'
+
+        # (Opcional) Scrape de coredns
+        # - job_name: 'coredns'
+        #   kubernetes_sd_configs:
+        #     - role: endpoints
+        #   relabel_configs:
+        #     - source_labels: [__meta_kubernetes_endpoints_name]
+        #       action: keep
+        #       regex: "kube-dns"
+
+pushgateway:
+  enabled: false
