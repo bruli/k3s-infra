@@ -13,7 +13,7 @@ spec:
     helm:
       values: |
         defaultSettings:
-          defaultReplicaCount: 1
+          defaultReplicaCount: "2"
           allowCollectingLonghornUsageMetrics: false
           defaultDataPath: /var/lib/longhorn
         persistence:
