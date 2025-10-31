@@ -5,7 +5,8 @@ args:
   # - --kubelet-use-node-status-port
 
 # hostNetwork pot ajudar en alguns entorns domèstics; per defecte el deixem a false.
-hostNetwork: false
+hostNetwork:
+    enabled: false
 
 resources:
   requests:
