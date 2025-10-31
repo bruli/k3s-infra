@@ -1,3 +1,4 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -25,6 +26,26 @@ spec:
 
         hostNetwork: false
         hostPID: false
+
+        # Evita l’init container que fa chown
+        initChownData:
+          enabled: false
+
+        # Mantén permisos correctes via fsGroup (uid/gid 472 és Grafana)
+        podSecurityContext:
+          fsGroup: 472
+          fsGroupChangePolicy: "OnRootMismatch"
+
+        securityContext:
+          runAsUser: 472
+          runAsGroup: 472
+          runAsNonRoot: true
+
+        persistence:
+          enabled: true
+          size: 2Gi
+          storageClassName: local-path
+          accessModes: [ReadWriteOnce]
 
         service:
           port: 9100
