@@ -1,15 +1,32 @@
+# --- Credencials (triar una opció) ---
+# OPCIÓ A: via Secret existent (recomanat)
+# admin:
+#   existingSecret: grafana-admin
+#   userKey: admin-user
+#   passwordKey: admin-password
+
+# OPCIÓ B: en clar (per proves)
 adminUser: "admin"
-adminPassword: "changeme"   # millor canviar-ho via Secret/ArgoCD secretRef si vols més seguretat
+adminPassword: "changeme"
 
 service:
   type: NodePort
   nodePort: 32000
+  port: 3000
 
 persistence:
   enabled: true
-#   size: 2Gi
-#   storageClassName: longhorn
+  size: 2Gi
   storageClassName: local-path
+
+# Sidecars perquè s’autoprovisionin datasources i dashboards
+sidecar:
+  datasources:
+    enabled: true
+    searchNamespace: ALL
+  dashboards:
+    enabled: true
+    searchNamespace: ALL
 
 datasources:
   datasources.yaml:
@@ -18,10 +35,10 @@ datasources:
       - name: Prometheus
         type: prometheus
         access: proxy
-        url: http://prometheus-server.prometheus.svc.cluster.local
+        # Ajusta el port segons el teu Service (80 o 9090)
+        url: http://prometheus-server.prometheus.svc.cluster.local:80
         isDefault: true
 
-# Per carregar dashboards des de valors/CM (no cal sidecar)
 dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
@@ -37,14 +54,12 @@ dashboardProviders:
 
 dashboards:
   default:
-    # 1) Dashboard personalitzat amb el promQL d'Average CPU del clúster
     cluster-cpu-average:
       json: |-
         {
           "id": null,
           "uid": null,
           "title": "Cluster CPU Average (5m)",
-          "timezone": "",
           "schemaVersion": 38,
           "version": 1,
           "refresh": "10s",
@@ -94,30 +109,20 @@ dashboards:
               "id": 2,
               "datasource": "Prometheus",
               "targets": [
-                {
-                  "refId": "A",
-                  "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))",
-                  "legendFormat": "avg %",
-                  "instant": false
-                }
+                { "refId": "A", "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))", "instant": false }
               ],
-              "fieldConfig": {
-                "defaults": { "unit": "percent", "decimals": 1 },
-                "overrides": []
-              },
+              "fieldConfig": { "defaults": { "unit": "percent", "decimals": 1 }, "overrides": [] },
               "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
               "gridPos": { "h": 8, "w": 16, "x": 8, "y": 0 }
             }
           ]
         }
 
-    # 2) Node Exporter Full (dashboard clàssic)
     node-exporter-full:
       gnetId: 1860
       revision: 31
       datasource: Prometheus
 
-    # 3) Kube State Metrics (recursos k8s)
     kube-state-metrics:
       gnetId: 13332
       revision: 1

@@ -5,31 +5,37 @@ server:
   persistentVolume:
     enabled: true
     size: 2Gi
-#     storageClass: longhorn
+    # storageClass: longhorn
     storageClass: local-path
   service:
     type: ClusterIP
-  global:
-    scrape_interval: 15s
-    evaluation_interval: 30s
   serverFiles:
     prometheus.yml:
+      global:
+        scrape_interval: 15s
+        evaluation_interval: 30s
       scrape_configs:
-        # Scrape de kube-state-metrics (Bitnami / chart oficial exposa a 8080)
+        # kube-state-metrics (Bitnami/oficial sol exposar HTTP a 8080)
         - job_name: 'kube-state-metrics'
           static_configs:
             - targets:
                 - 'kube-state-metrics.kube-system.svc.cluster.local:8080'
+
+        # node-exporter (descoberta via endpoints)
         - job_name: 'node-exporter'
           kubernetes_sd_configs:
-              - role: endpoints
+            - role: endpoints
           relabel_configs:
-              - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-                action: keep
-                regex: prometheus-node-exporter
-              - source_labels: [__meta_kubernetes_endpoint_port_name]
-                action: keep
-                regex: metrics
+            # (Opcional) limita a l'namespace 'monitoring'
+            - source_labels: [__meta_kubernetes_namespace]
+              action: keep
+              regex: monitoring
+            - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
+              action: keep
+              regex: prometheus-node-exporter
+            - source_labels: [__meta_kubernetes_endpoint_port_name]
+              action: keep
+              regex: metrics
 
 pushgateway:
   enabled: false
