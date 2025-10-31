@@ -5,10 +5,10 @@ service:
   type: NodePort
   nodePort: 32000
 
-persistence:
-  enabled: true
-  size: 2Gi
-  storageClassName: local-path
+# persistence:
+#   enabled: true
+#   size: 2Gi
+#   storageClassName: local-path
 
 datasources:
   datasources.yaml:
