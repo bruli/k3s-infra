@@ -62,39 +62,39 @@ datasources:
         isDefault: true
 
 # --- (Opcional) Un dashboard simple d'exemple ---
-dashboards:
-  default:
-    cluster-cpu-average:
-      json: |-
-        {
-          "title": "Cluster CPU Average (5m)",
-          "schemaVersion": 38,
-          "version": 1,
-          "refresh": "10s",
-          "time": { "from": "now-15m", "to": "now" },
-          "panels": [
-            {
-              "type": "stat",
-              "title": "CPU Avg (cluster, 5m)",
-              "id": 1,
-              "datasource": "Prometheus",
-              "targets": [
-                { "refId": "A", "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))", "instant": true }
-              ],
-              "fieldConfig": { "defaults": { "unit": "percent", "decimals": 1 } },
-              "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
-            },
-            {
-              "type": "timeseries",
-              "title": "CPU Avg (cluster over time)",
-              "id": 2,
-              "datasource": "Prometheus",
-              "targets": [
-                { "refId": "A", "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))" }
-              ],
-              "fieldConfig": { "defaults": { "unit": "percent", "decimals": 1 } },
-              "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
-              "gridPos": { "h": 8, "w": 16, "x": 8, "y": 0 }
-            }
-          ]
-        }
+# dashboards:
+#   default:
+#     cluster-cpu-average:
+#       json: |-
+#         {
+#           "title": "Cluster CPU Average (5m)",
+#           "schemaVersion": 38,
+#           "version": 1,
+#           "refresh": "10s",
+#           "time": { "from": "now-15m", "to": "now" },
+#           "panels": [
+#             {
+#               "type": "stat",
+#               "title": "CPU Avg (cluster, 5m)",
+#               "id": 1,
+#               "datasource": "Prometheus",
+#               "targets": [
+#                 { "refId": "A", "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))", "instant": true }
+#               ],
+#               "fieldConfig": { "defaults": { "unit": "percent", "decimals": 1 } },
+#               "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
+#             },
+#             {
+#               "type": "timeseries",
+#               "title": "CPU Avg (cluster over time)",
+#               "id": 2,
+#               "datasource": "Prometheus",
+#               "targets": [
+#                 { "refId": "A", "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))" }
+#               ],
+#               "fieldConfig": { "defaults": { "unit": "percent", "decimals": 1 } },
+#               "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+#               "gridPos": { "h": 8, "w": 16, "x": 8, "y": 0 }
+#             }
+#           ]
+#         }
