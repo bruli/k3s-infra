@@ -19,15 +19,16 @@ server:
           static_configs:
             - targets:
                 - 'kube-state-metrics.kube-system.svc.cluster.local:8080'
-
-        # (Opcional) Scrape de coredns
-        # - job_name: 'coredns'
-        #   kubernetes_sd_configs:
-        #     - role: endpoints
-        #   relabel_configs:
-        #     - source_labels: [__meta_kubernetes_endpoints_name]
-        #       action: keep
-        #       regex: "kube-dns"
+        - job_name: 'node-exporter'
+          kubernetes_sd_configs:
+              - role: endpoints
+          relabel_configs:
+              - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
+                action: keep
+                regex: prometheus-node-exporter
+              - source_labels: [__meta_kubernetes_endpoint_port_name]
+                action: keep
+                regex: metrics
 
 pushgateway:
   enabled: false
