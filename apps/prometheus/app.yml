@@ -14,7 +14,6 @@ spec:
       values: >-
         alertmanager:
           enabled: true
-
         server:
           persistentVolume:
             enabled: true
@@ -33,7 +32,6 @@ spec:
                   static_configs:
                     - targets:
                         - 'kube-state-metrics.kube-system.svc.cluster.local:8080'
-
                 # node-exporter (descoberta via endpoints)
                 - job_name: 'node-exporter'
                   kubernetes_sd_configs:

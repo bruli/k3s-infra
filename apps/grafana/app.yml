@@ -69,7 +69,7 @@ spec:
               - name: Prometheus
                 type: prometheus
                 access: proxy
-                url: http://prometheus-server.prometheus.svc.cluster.local:9090
+                url: http://prometheus-server.prometheus.svc.cluster.local:80
                 isDefault: true
 
         dashboards:
