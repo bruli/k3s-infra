@@ -22,7 +22,7 @@ spec:
           defaultFsType: ext4
         metrics:
           serviceMonitor:
-            enabled: true
+            enabled: false
             namespace: prometheus
             labels:
               release: prometheus
