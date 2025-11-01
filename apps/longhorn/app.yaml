@@ -23,9 +23,9 @@ spec:
         metrics:
           serviceMonitor:
             enabled: true
-            namespace: prometheus
-            labels:
-              release: prometheus
+#             namespace: prometheus
+#             labels:
+#               release: prometheus
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
