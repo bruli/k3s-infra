@@ -15,13 +15,25 @@ spec:
     targetRevision: 66.3.1
     helm:
       values: |
+        crds:
+          enabled: true
+
         grafana:
-          enabled: false  
+          enabled: false  # ja tens Grafana a banda
+
+        # Evita xocs amb el node-exporter antic (tens dos DaemonSets)
+        nodeExporter:
+          enabled: false
+
         prometheus:
+          enabled: true
           prometheusSpec:
-            # permet detectar ServiceMonitors en qualsevol namespace
             serviceMonitorNamespaceSelector: {}
             serviceMonitorSelector: {}
+            podMonitorNamespaceSelector: {}
+            podMonitorSelector: {}
+            ruleNamespaceSelector: {}
+            ruleSelector: {}
   syncPolicy:
     automated:
       prune: true
