@@ -18,7 +18,7 @@ spec:
           persistentVolume:
             enabled: true
             size: 2Gi
-            storageClass: local-path
+            storageClass: longhorn
           service:
             type: ClusterIP
           serverFiles:
