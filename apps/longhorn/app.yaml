@@ -9,12 +9,11 @@ spec:
   source:
     repoURL: https://charts.longhorn.io
     chart: longhorn
-    targetRevision: ~1.10.0
+    targetRevision: v1.9.2
     helm:
       values: |
         defaultSettings:
-          defaultReplicaCount: "2"
-          allowCollectingLonghornUsageMetrics: "false"
+          defaultReplicaCount: 2
           defaultDataPath: /var/lib/longhorn
         persistence:
           defaultClass: true
