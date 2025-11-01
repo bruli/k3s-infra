@@ -17,14 +17,10 @@ spec:
       values: |
         crds:
           enabled: true
-
         grafana:
-          enabled: false  # ja tens Grafana a banda
-
-        # Evita xocs amb el node-exporter antic (tens dos DaemonSets)
-        nodeExporter:
           enabled: false
-
+        nodeExporter:
+          enabled: true
         prometheus:
           enabled: true
           prometheusSpec:

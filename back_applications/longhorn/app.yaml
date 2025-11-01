@@ -14,18 +14,18 @@ spec:
       values: |
         preUpgradeChecker:
           jobEnabled: false
+
         defaultSettings:
           defaultReplicaCount: 2
           defaultDataPath: /var/lib/longhorn
+
         persistence:
           defaultClass: true
           defaultFsType: ext4
+
         metrics:
           serviceMonitor:
             enabled: true
-#             namespace: prometheus
-#             labels:
-#               release: prometheus
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
