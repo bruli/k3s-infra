@@ -12,6 +12,8 @@ spec:
     targetRevision: v1.9.2
     helm:
       values: |
+        preUpgradeChecker:
+          jobEnabled: false
         defaultSettings:
           defaultReplicaCount: 2
           defaultDataPath: /var/lib/longhorn
