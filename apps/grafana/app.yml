@@ -1,0 +1,65 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 10.1.4
+    helm:
+      values: |
+        adminUser: "admin"
+        adminPassword: "admin"
+
+        service:
+          type: NodePort
+          port: 80
+          targetPort: 3000
+          nodePort: 32000
+
+        persistence:
+          enabled: true
+          type: pvc
+          storageClassName: longhorn
+          accessModes: ["ReadWriteOnce"]
+          size: 5Gi
+
+        # Exemple de datasource (ajusta el nom del svc)
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+              - name: Prometheus
+                type: prometheus
+                access: proxy
+                url: http://prometheus-server.prometheus.svc.cluster.local
+                isDefault: true
+
+        # (Opcional) dashboards provisionats
+#         dashboardProviders:
+#           dashboardproviders.yaml:
+#             apiVersion: 1
+#             providers:
+#               - name: 'default'
+#                 orgId: 1
+#                 folder: ''
+#                 type: file
+#                 disableDeletion: false
+#                 options:
+#                   path: /var/lib/grafana/dashboards/default
+#         dashboards:
+#           default: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grafana
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
