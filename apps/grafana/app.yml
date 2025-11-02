@@ -20,6 +20,12 @@ spec:
         adminUser: admin
         adminPassword: "admin"
 
+        server:
+          persistence:
+            enabled: true
+            size: 5Gi
+            storageClass: longhorn
+
         service:
           type: ClusterIP
           port: 80

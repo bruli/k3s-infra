@@ -18,7 +18,11 @@ spec:
     helm:
       values: |
         server:
-          service:
+            persistentVolume:
+                enabled: true
+                size: 20Gi
+                storageClass: longhorn
+        service:
             type: ClusterIP
         alertmanager:
           enabled: false
