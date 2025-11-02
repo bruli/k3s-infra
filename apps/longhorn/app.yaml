@@ -21,6 +21,8 @@ spec:
         serviceAccount:
           create: true
           name: longhorn-service-account
+          annotations:
+              argocd.argoproj.io/sync-wave: "-1"
 
         # Longhorn com a StorageClass per defecte del clúster
         persistence:
@@ -44,6 +46,8 @@ spec:
             kubernetes.io/arch: arm64
           tolerations:
             - operator: "Exists"
+          annotations:
+              argocd.argoproj.io/sync-wave: "0"
 
         # Ingress senzill (HTTP) per a la UI de Longhorn
         ingress:
