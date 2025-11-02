@@ -26,6 +26,16 @@ spec:
             namespace: prometheus
             labels:
               release: prometheus
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          annotations:
+            traefik.ingress.kubernetes.io/router.entrypoints: web
+          host: longhorn.192.168.1.14.nip.io
+          tls: false
+          path: /
+          pathType: Prefix
+
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
