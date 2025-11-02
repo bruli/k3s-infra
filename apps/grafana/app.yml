@@ -4,29 +4,25 @@ kind: Application
 metadata:
   name: grafana
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: monitoring
 spec:
   project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: grafana
-    targetRevision: 10.1.4
+    targetRevision: 8.6.2
     helm:
       values: |
-        adminUser: "admin"
+        adminUser: admin
         adminPassword: "admin"
 
         service:
-          type: NodePort
+          type: ClusterIP
           port: 80
-          targetPort: 3000
-          nodePort: 32000
-
-        persistence:
-          enabled: true
-          type: pvc
-          storageClassName: longhorn
-          accessModes: ["ReadWriteOnce"]
-          size: 5Gi
 
         datasources:
           datasources.yaml:
@@ -35,31 +31,29 @@ spec:
               - name: Prometheus
                 type: prometheus
                 access: proxy
-                url: http://kube-prometheus-stack-prometheus.prometheus.svc:9090
                 isDefault: true
+                url: http://prometheus-server.monitoring.svc.cluster.local
 
-        # (Opcional) Dashboard oficial Longhorn
-        dashboardProviders:
-          dashboardproviders.yaml:
-            apiVersion: 1
-            providers:
-              - name: 'default'
-                orgId: 1
-                folder: ''
-                type: file
-                disableDeletion: false
-                editable: true
-                options:
-                  path: /var/lib/grafana/dashboards/default
-        dashboards:
-          default:
-            longhorn:
-              gnetId: 13032
-              revision: 1
-              datasource: Prometheus
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: grafana
+        # Ingress per Traefik (K3s)
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          annotations:
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.tls: "true"
+          path: /
+          pathType: Prefix
+          hosts:
+            - grafana.192.168.1.14.nip.io
+          tls:
+            - secretName: grafana-tls
+              hosts:
+                - grafana.192.168.1.14.nip.io
+
+        persistence:
+          enabled: false
+        testFramework:
+          enabled: false
   syncPolicy:
     automated:
       prune: true

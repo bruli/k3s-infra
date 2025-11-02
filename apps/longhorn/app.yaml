@@ -4,31 +4,39 @@ kind: Application
 metadata:
   name: longhorn
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: storage
 spec:
   project: default
-  source:
-    repoURL: https://charts.longhorn.io
-    chart: longhorn
-    targetRevision: v1.9.2
-    helm:
-      values: |
-        preUpgradeChecker:
-          jobEnabled: false
-
-        defaultSettings:
-          defaultReplicaCount: 2
-          defaultDataPath: /var/lib/longhorn
-
-        persistence:
-          defaultClass: true
-          defaultFsType: ext4
-
-        metrics:
-          serviceMonitor:
-            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
+  source:
+    repoURL: https://charts.longhorn.io
+    chart: longhorn
+    targetRevision: 1.7.1
+    helm:
+      values: |
+        metrics:
+          enabled: false
+
+        defaultSettings:
+          defaultReplicaCount: 2
+          createDefaultDiskLabeledNodes: true
+
+        # Ingress cap a la UI de Longhorn (frontend)
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          host: longhorn.192.168.1.14.nip.io
+          tls: true
+          tlsSecret: longhorn-tls
+          annotations:
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.tls: "true"
+
+        persistence:
+          defaultClass: true
   syncPolicy:
     automated:
       prune: true
@@ -36,3 +44,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
+      - PruneLast=true
