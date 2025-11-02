@@ -4,8 +4,7 @@ kind: Application
 metadata:
   name: grafana
   namespace: argocd
-  annotations:
-      argocd.argoproj.io/sync-wave: "30"
+  annotations: {argocd.argoproj.io/sync-wave: "30"}
 spec:
   project: default
   source:
