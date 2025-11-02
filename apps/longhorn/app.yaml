@@ -4,8 +4,6 @@ kind: Application
 metadata:
   name: longhorn
   namespace: argocd
-  labels:
-    app.kubernetes.io/part-of: storage
 spec:
   project: default
   destination:
@@ -14,7 +12,7 @@ spec:
   source:
     repoURL: https://charts.longhorn.io
     chart: longhorn
-    targetRevision: 1.7.1
+    targetRevision: 1.9.2
     helm:
       values: |
         metrics:
@@ -24,19 +22,16 @@ spec:
           defaultReplicaCount: 2
           createDefaultDiskLabeledNodes: true
 
-        # Ingress cap a la UI de Longhorn (frontend)
+        # Ingress senzill (HTTP) per evitar TLS fins que tot funcione
         ingress:
           enabled: true
           ingressClassName: traefik
-          host: longhorn.192.168.1.14.nip.io
-          tls: true
-          tlsSecret: longhorn-tls
           annotations:
-            traefik.ingress.kubernetes.io/router.entrypoints: websecure
-            traefik.ingress.kubernetes.io/router.tls: "true"
-
-        persistence:
-          defaultClass: true
+            traefik.ingress.kubernetes.io/router.entrypoints: web
+          host: longhorn.192.168.1.14.nip.io
+          tls: false
+          path: /
+          pathType: Prefix
   syncPolicy:
     automated:
       prune: true
