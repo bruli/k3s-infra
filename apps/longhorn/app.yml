@@ -12,18 +12,20 @@ spec:
     targetRevision: v1.9.2
     helm:
       values: |
+        preUpgradeChecker:
+          jobEnabled: false
         defaultSettings:
           defaultReplicaCount: 2
           defaultDataPath: /var/lib/longhorn
-
-        # StorageClass config
         persistence:
           defaultClass: true
           defaultFsType: ext4
-          reclaimPolicy: Delete
-        defaultStorageClass:
-          enabled: true
-
+        metrics:
+          serviceMonitor:
+            enabled: false
+            namespace: prometheus
+            labels:
+              release: prometheus
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
@@ -34,4 +36,3 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
-      - PruneLast=true
