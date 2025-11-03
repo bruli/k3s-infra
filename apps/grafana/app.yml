@@ -48,6 +48,9 @@ spec:
             searchNamespace: ALL
             provider:
               foldersFromFilesStructure: false
+            securityContext:
+                runAsUser: 0    # <- temporal; quan ho tinguem ok, el tornem a 472
+                runAsGroup: 0
 
         datasources:
           datasources.yaml:
