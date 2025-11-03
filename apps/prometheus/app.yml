@@ -1,7 +1,8 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana
+  name: prometheus
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: monitoring
@@ -10,87 +11,23 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
-
-  # MULTI-SOURCE correcte
-  sources:
-    # 1) Helm chart de Grafana
-    - repoURL: https://grafana.github.io/helm-charts
-      chart: grafana
-      targetRevision: 8.6.2
-      helm:
-        values: |
-          adminUser: admin
-          adminPassword: "admin"
-
-          # Persistència al top-level del chart (no dins "server")
-          persistence:
-            enabled: true
-            size: 5Gi
-            storageClassName: longhorn
-
-          service:
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: prometheus
+    targetRevision: 25.24.1
+    helm:
+      values: |
+        server:
+            persistentVolume:
+                enabled: true
+                size: 20Gi
+                storageClass: longhorn
+        service:
             type: ClusterIP
-            port: 80
-
-          # Providers de dashboards
-          dashboardProviders:
-            dashboardproviders.yaml:
-              apiVersion: 1
-              providers:
-                - name: 'default'
-                  orgId: 1
-                  folder: 'General'
-                  type: file
-                  disableDeletion: true
-                  editable: true
-                  options:
-                    path: /var/lib/grafana/dashboards/default
-
-          # Sidecar de dashboards
-          sidecar:
-            dashboards:
-              enabled: true
-              label: grafana_dashboard
-              searchNamespace: ALL
-              provider:
-                foldersFromFilesStructure: false
-
-          # Datasource Prometheus (verifica el nom del servei)
-          datasources:
-            datasources.yaml:
-              apiVersion: 1
-              datasources:
-                - name: Prometheus
-                  type: prometheus
-                  access: proxy
-                  isDefault: true
-                  url: http://prometheus-server.monitoring.svc.cluster.local
-
-          # Ingress per Traefik (K3s)
-          ingress:
-            enabled: true
-            ingressClassName: traefik
-            annotations:
-              traefik.ingress.kubernetes.io/router.entrypoints: websecure
-              traefik.ingress.kubernetes.io/router.tls: "true"
-            path: /
-            pathType: Prefix
-            hosts:
-              - grafana.192.168.1.14.nip.io
-            tls:
-              - secretName: grafana-tls
-                hosts:
-                  - grafana.192.168.1.14.nip.io
-
-          # Opcional (algunes versions del chart el porten)
-          testFramework:
-            enabled: false
-
-    # 2) Manifests (Kustomize) dels dashboards del teu repo
-    - repoURL: https://github.com/bruli/k3s-infra.git
-      targetRevision: main
-      path: apps/grafana/dashboards
-
+        alertmanager:
+          enabled: false
+        pushgateway:
+          enabled: false
   syncPolicy:
     automated:
       prune: true
