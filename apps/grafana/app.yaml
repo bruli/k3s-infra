@@ -1,11 +1,8 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: grafana
   namespace: argocd
-  labels:
-    app.kubernetes.io/part-of: monitoring
 spec:
   project: default
   destination:
@@ -20,15 +17,32 @@ spec:
         adminUser: admin
         adminPassword: "admin"
 
-        server:
-          persistence:
-            enabled: true
-            size: 5Gi
-            storageClass: longhorn
+        persistence:
+          enabled: true
+          size: 5Gi
+          storageClassName: longhorn
 
         service:
           type: ClusterIP
           port: 80
+
+        # 1) Provider que mira la carpeta "default"
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+              - name: default
+                orgId: 1
+                folder: General
+                type: file
+                disableDeletion: true
+                editable: true
+                options:
+                  path: /var/lib/grafana/dashboards/default
+
+        # 2) Digue-li al chart quin ConfigMap muntar a /var/lib/grafana/dashboards/default
+        dashboardsConfigMaps:
+          default: grafana-dashboards
 
         datasources:
           datasources.yaml:
@@ -40,7 +54,6 @@ spec:
                 isDefault: true
                 url: http://prometheus-server.monitoring.svc.cluster.local
 
-        # Ingress per Traefik (K3s)
         ingress:
           enabled: true
           ingressClassName: traefik
@@ -56,14 +69,16 @@ spec:
               hosts:
                 - grafana.192.168.1.14.nip.io
 
-        persistence:
-          enabled: false
         testFramework:
           enabled: false
+
+        # Opcional: amb PVC RWO va millor Recreate
+        deploymentStrategy:
+          type: Recreate
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true
