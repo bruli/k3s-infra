@@ -4,8 +4,8 @@ kind: Application
 metadata:
   name: grafana-dashboards
   namespace: argocd
-annotations:
-  k8s-sidecar-target-directory: "/var/lib/grafana/dashboards"
+# annotations:
+#   k8s-sidecar-target-directory: "/var/lib/grafana/dashboards"
 spec:
   project: default
   destination:
