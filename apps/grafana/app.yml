@@ -50,8 +50,8 @@ spec:
             provider:
               foldersFromFilesStructure: false
             securityContext:
-                runAsUser: 0    # <- temporal; quan ho tinguem ok, el tornem a 472
-                runAsGroup: 0
+                runAsUser: 472
+                runAsGroup: 472
 
         datasources:
           datasources.yaml:
@@ -103,6 +103,7 @@ spec:
         podSecurityContext:
           fsGroup: 472
           fsGroupChangePolicy: "OnRootMismatch"
+          runAsNonRoot: true
 
         # usuari/grup efectiu del contenidor principal (coherent amb Grafana)
         securityContext:
