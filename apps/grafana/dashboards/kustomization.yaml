@@ -1,5 +1,4 @@
 namespace: monitoring
-
 generatorOptions:
   disableNameSuffixHash: true
   labels:

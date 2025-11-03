@@ -76,6 +76,22 @@ spec:
 
         testFramework:
           enabled: false
+
+        initChownData:
+          enabled: true
+          # aquests valors funcionen bé amb K3s/Longhorn
+          runAsUser: 0
+
+        # perquè TOTS els contenidors del pod puguen escriure al volum
+        podSecurityContext:
+          fsGroup: 472
+          fsGroupChangePolicy: "OnRootMismatch"
+
+        # usuari/grup efectiu del contenidor principal (coherent amb Grafana)
+        securityContext:
+          runAsUser: 472
+          runAsGroup: 472
+
   syncPolicy:
     automated:
       prune: true
