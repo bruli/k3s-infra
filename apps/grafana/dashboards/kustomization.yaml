@@ -12,5 +12,4 @@ configMapGenerator:
       - cluster.json
       - pinger.json
       - kubernetes-cluster.json
-      - node-exporter.json
       - longhorn.json
