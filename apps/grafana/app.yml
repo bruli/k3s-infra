@@ -82,6 +82,19 @@ spec:
           # aquests valors funcionen bé amb K3s/Longhorn
           runAsUser: 0
 
+        extraInitContainers:
+          - name: create-dashboards-dir
+            image: busybox
+            command:
+              - sh
+              - -c
+              - mkdir -p /var/lib/grafana/dashboards && chown -R 472:472 /var/lib/grafana
+            securityContext:
+              runAsUser: 0
+            volumeMounts:
+              - name: storage
+                mountPath: /var/lib/grafana
+
         # perquè TOTS els contenidors del pod puguen escriure al volum
         podSecurityContext:
           fsGroup: 472
