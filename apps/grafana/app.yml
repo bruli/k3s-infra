@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: grafana
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: monitoring
 spec:
   project: default
   destination:
@@ -18,40 +20,15 @@ spec:
         adminUser: admin
         adminPassword: "admin"
 
-        persistence:
-          enabled: true
-          size: 5Gi
-          storageClassName: longhorn
+        server:
+          persistence:
+            enabled: true
+            size: 5Gi
+            storageClass: longhorn
 
         service:
           type: ClusterIP
           port: 80
-
-        dashboardProviders:
-          dashboardproviders.yaml:
-            apiVersion: 1
-            providers:
-              - name: default
-                orgId: 1
-                folder: General
-                type: file
-                disableDeletion: true
-                editable: true
-                options:
-                  path: /var/lib/grafana/dashboards
-
-        sidecar:
-          dashboards:
-            enabled: true
-            label: grafana_dashboard
-            labelValue: "1"
-            searchNamespace: ALL
-            folder: /var/lib/grafana/dashboards
-            provider:
-              foldersFromFilesStructure: false
-            securityContext:
-                runAsUser: 472
-                runAsGroup: 472
 
         datasources:
           datasources.yaml:
@@ -63,6 +40,7 @@ spec:
                 isDefault: true
                 url: http://prometheus-server.monitoring.svc.cluster.local
 
+        # Ingress per Traefik (K3s)
         ingress:
           enabled: true
           ingressClassName: traefik
@@ -78,27 +56,14 @@ spec:
               hosts:
                 - grafana.192.168.1.14.nip.io
 
+        persistence:
+          enabled: false
         testFramework:
           enabled: false
-
-        # perquè TOTS els contenidors del pod puguen escriure al volum
-        podSecurityContext:
-          fsGroup: 472
-          fsGroupChangePolicy: "OnRootMismatch"
-          runAsNonRoot: true
-
-        # usuari/grup efectiu del contenidor principal (coherent amb Grafana)
-        securityContext:
-          runAsUser: 472
-          runAsGroup: 472
-
-        deploymentStrategy:
-          type: Recreate
-
-
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
