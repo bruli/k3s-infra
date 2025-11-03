@@ -26,21 +26,21 @@ spec:
           type: ClusterIP
           port: 80
 
-        # 1) Provider que mira la carpeta "default"
         dashboardProviders:
           dashboardproviders.yaml:
             apiVersion: 1
             providers:
               - name: default
                 orgId: 1
-                folder: General
+                folder: Provisioned
                 type: file
                 disableDeletion: true
                 editable: true
+                updateIntervalSeconds: 30
                 options:
                   path: /var/lib/grafana/dashboards/default
 
-        # 2) Digue-li al chart quin ConfigMap muntar a /var/lib/grafana/dashboards/default
+        # Muntar directament el ConfigMap com a dashboards (sense sidecar)
         dashboardsConfigMaps:
           default: grafana-dashboards
 
@@ -72,10 +72,8 @@ spec:
         testFramework:
           enabled: false
 
-        # Opcional: amb PVC RWO va millor Recreate
         deploymentStrategy:
           type: Recreate
-
   syncPolicy:
     automated:
       prune: true
