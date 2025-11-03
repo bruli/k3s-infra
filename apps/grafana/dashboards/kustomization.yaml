@@ -5,7 +5,7 @@ generatorOptions:
   labels:
     grafana_dashboard: "1"   # <-- ha de quadrar amb sidecar.dashboards.label
   annotations:
-    k8s-sidecar-target-directory: "/var/lib/grafana/dashboards/default"
+    k8s-sidecar-target-directory: "/var/lib/grafana/dashboards"
 
 configMapGenerator:
   - name: grafana-dashboards
