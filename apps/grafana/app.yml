@@ -31,9 +31,9 @@ spec:
           dashboardproviders.yaml:
             apiVersion: 1
             providers:
-              - name: 'default'
+              - name: default
                 orgId: 1
-                folder: 'General'
+                folder: General
                 type: file
                 disableDeletion: true
                 editable: true
@@ -79,5 +79,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  syncOptions:
-    - CreateNamespace=true
+    syncOptions:
+      - CreateNamespace=true
