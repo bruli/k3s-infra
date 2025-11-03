@@ -1,0 +1,23 @@
+___
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudflared
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: networking
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/bruli/k3s-infra.git
+    targetRevision: main
+    path: infra/cloudflared
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: networking
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
