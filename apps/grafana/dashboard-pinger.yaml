@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-pinger
-  namespace: grafana
+  namespace: monitoring
   labels:
     grafana_dashboard: "1"             # <- el sidecar de dashboards el recull per aquesta etiqueta
   annotations:
