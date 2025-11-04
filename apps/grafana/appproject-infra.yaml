@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra
+  namespace: argocd
+spec:
+  description: Recursos d'infraestructura (monitoring, etc.)
+  # Repositoris permesos
+  sourceRepos:
+    - https://grafana.github.io/helm-charts
+    # afegeix altres repos si els usaràs, p. ex. el teu Git
+    # - https://github.com/EL_TEU_USUARI/EL_TEU_REPO.git
+
+  # Destinacions permeses
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: monitoring
+
+  # Permetre crear recursos de clúster necessaris (p. ex. Namespace, CRDs si escau)
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    # si algun chart crea CRDs:
+    # - group: apiextensions.k8s.io
+    #   kind: CustomResourceDefinition
+
+  # (opcional) polítiques de sincronització/seguretat
+  orphanedResources:
+    warn: true
