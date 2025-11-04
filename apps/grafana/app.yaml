@@ -27,7 +27,15 @@ spec:
           type: ClusterIP
           port: 80
 
-        # On Grafana trobarà els dashboards provisionats
+        # Sidecar que recull ConfigMaps/Secrets amb dashboards
+        sidecar:
+          dashboards:
+            enabled: true
+            label: grafana_dashboard        # etiqueta que mirarà el sidecar
+            folderAnnotation: grafana_folder # anotació opcional per carpeta a Grafana
+            searchNamespace: ALL      # o "ALL" si vols tots els namespaces
+
+        # Provider que llegeix els dashboards generats pel sidecar
         dashboardProviders:
           dashboardproviders.yaml:
             apiVersion: 1
@@ -36,16 +44,14 @@ spec:
                 orgId: 1
                 folder: Provisioned
                 type: file
-                disableDeletion: false     # ← permet eliminar dashboards si ja no estan al CM
+                disableDeletion: false
                 editable: true
+                allowUiUpdates: true
                 updateIntervalSeconds: 30
                 options:
-                  path: /var/lib/grafana/dashboards/default
+                  path: /tmp/dashboards      # ruta on el sidecar deixa els JSON
 
-        # Aquí li diem que munti el ConfigMap amb els dashboards JSON
-        dashboardsConfigMaps:
-          default: grafana-dashboards
-
+        # Datasource Prometheus
         datasources:
           datasources.yaml:
             apiVersion: 1
