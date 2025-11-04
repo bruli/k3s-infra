@@ -5,8 +5,8 @@ metadata:
   namespace: monitoring
   labels:
     grafana_dashboard: "1"             # <- el sidecar de dashboards el recull per aquesta etiqueta
-  annotations:
-    grafana_folder: "Provisioned"       # <- carpeta on apareixerà a Grafana (opcional)
+#   annotations:
+#     grafana_folder: "Provisioned"       # <- carpeta on apareixerà a Grafana (opcional)
 data:
   pinger-overview.json: |-
     {
