@@ -3,13 +3,9 @@ namespace: monitoring
 
 generatorOptions:
   disableNameSuffixHash: true
-  labels:
-    grafana_dashboard: "1"   # opcional; ja no és necessari sense sidecar
 
 configMapGenerator:
   - name: grafana-dashboards
     files:
       - cluster.json
       - pinger.json
-      - kubernetes-cluster.json
-      - longhorn.json
