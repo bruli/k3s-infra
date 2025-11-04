@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
     - appproject-infra.yaml
-    - app.yaml              
+    - app.yaml
     - dashboard-pinger.yaml
     - dashboard-cluster.yaml
