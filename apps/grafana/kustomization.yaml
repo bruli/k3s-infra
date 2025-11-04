@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
     - appproject-infra.yaml
-    - app.yaml              # l’Application d’ArgoCD (grafana)
-    - dashboard-pinger.yaml # el ConfigMap amb el dashboard embebit
+    - app.yaml              
+    - dashboard-pinger.yaml
+    - dashboard-cluster.yaml
