@@ -2,16 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: test-app
-  namespace: argocd
+  namespace: argocd   # <-- important: és el namespace d'Argo CD
 spec:
   project: default
   source:
     repoURL: https://github.com/bruli/k3s-infra.git
     targetRevision: main
-    path: apps/test-app/manifests   # on posarem els manifests de prova
+    path: apps/test-app/manifests   # subcarpeta amb els manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: test-app             # <-- namespace on es desplegarà
   syncPolicy:
     automated:
       prune: true
