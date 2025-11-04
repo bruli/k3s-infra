@@ -7,5 +7,5 @@ generatorOptions:
 configMapGenerator:
   - name: grafana-dashboards
     files:
-      - grafana/dashboards/assets/cluster.json
-      - grafana/dashboards/assets/pinger.json
+      - assets/cluster.json
+      - assets/pinger.json
