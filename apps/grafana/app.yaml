@@ -1,16 +1,14 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: grafana
   namespace: argocd
-  labels:
-    app.kubernetes.io/part-of: monitoring
 spec:
-  project: default
+  project: infra
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
+
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: grafana
@@ -20,15 +18,33 @@ spec:
         adminUser: admin
         adminPassword: "admin"
 
-        server:
-          persistence:
-            enabled: true
-            size: 5Gi
-            storageClass: longhorn
+        persistence:
+          enabled: true
+          size: 5Gi
+          storageClassName: longhorn
 
         service:
           type: ClusterIP
           port: 80
+
+        # On Grafana trobarà els dashboards provisionats
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+              - name: default
+                orgId: 1
+                folder: Provisioned
+                type: file
+                disableDeletion: false     # ← permet eliminar dashboards si ja no estan al CM
+                editable: true
+                updateIntervalSeconds: 30
+                options:
+                  path: /var/lib/grafana/dashboards/default
+
+        # Aquí li diem que munti el ConfigMap amb els dashboards JSON
+        dashboardsConfigMaps:
+          default: grafana-dashboards
 
         datasources:
           datasources.yaml:
@@ -40,7 +56,6 @@ spec:
                 isDefault: true
                 url: http://prometheus-server.monitoring.svc.cluster.local
 
-        # Ingress per Traefik (K3s)
         ingress:
           enabled: true
           ingressClassName: traefik
@@ -56,14 +71,12 @@ spec:
               hosts:
                 - grafana.192.168.1.14.nip.io
 
-        persistence:
-          enabled: false
-        testFramework:
-          enabled: false
+        deploymentStrategy:
+          type: Recreate
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true
