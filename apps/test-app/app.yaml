@@ -2,17 +2,19 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: test-app
-  namespace: argocd   # <-- important: és el namespace d'Argo CD
+  namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/bruli/k3s-infra.git
     targetRevision: main
-    path: apps/test-app/manifests   # subcarpeta amb els manifests
+    path: apps/test-app/manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: test-app             # <-- namespace on es desplegarà
+    namespace: test-app
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true   # <-- perquè es cree el ns "test-app"
