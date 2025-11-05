@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nats
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nats
+  source:
+    repoURL: https://nats-io.github.io/k8s/helm/charts
+    chart: nats
+    targetRevision: 2.12.1
+    helm:
+      releaseName: nats
+      values: |
+        nats:
+          jetstream:
+            enabled: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
