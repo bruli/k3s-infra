@@ -7,7 +7,7 @@ metadata:
     grafana_dashboard: "1"
 data:
   alerter-overview.json: |
-  {
+    {
     "annotations": {
       "list": [
         {
