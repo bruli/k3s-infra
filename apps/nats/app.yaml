@@ -13,12 +13,13 @@ spec:
     chart: nats
     targetRevision: 2.12.1
     helm:
-        values: |
-            config: |
-                port: 4222
-                http: 8222          # 👈 habilita /varz, /connz, /subsz
-                # (opcional) cluster:
-                # cluster: { port: 6222 }
+      values: |
+        nats:
+          config: |
+            port: 4222
+            http: 8222
+            # cluster:
+            #   port: 6222
   syncPolicy:
     automated:
       prune: true
