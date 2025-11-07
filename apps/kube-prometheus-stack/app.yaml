@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: monitoring
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 79.4.0
+    helm:
+      values: |
+        # Evita problemes típics i duplicats
+        prometheus-pushgateway:
+          enabled: false    # Desactiva si no el fas servir
+
+        nodeExporter:
+          tolerations:
+            - operator: "Exists"   # perquè corri també en nodes amb taints
+          # (opcional) sense hostPort per evitar col·lisions:
+          hostNetwork: false
+          service:
+            hostPort: false
+
+        kube-state-metrics:
+          tolerations:
+            - operator: "Exists"
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
