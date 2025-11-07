@@ -60,7 +60,7 @@ spec:
                 type: prometheus
                 access: proxy
                 isDefault: true
-                url: http://prometheus-server.monitoring.svc.cluster.local
+                url: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
 
         ingress:
           enabled: true
