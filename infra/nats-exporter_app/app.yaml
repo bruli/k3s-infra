@@ -1,23 +1,20 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nats
+  name: cloudflared
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: monitoring
 spec:
   project: default
+  source:
+    repoURL: https://github.com/bruli/k3s-infra.git
+    targetRevision: main
+    path: infra/nats-exporter
   destination:
     server: https://kubernetes.default.svc
-    namespace: nats
-  source:
-    repoURL: https://nats-io.github.io/k8s/helm/charts
-    chart: nats
-    targetRevision: 2.12.1
-    helm:
-      values: |
-        nats:
-          monitor:
-            enabled: true
-            port: 8222
+    namespace: monitoring
   syncPolicy:
     automated:
       prune: true

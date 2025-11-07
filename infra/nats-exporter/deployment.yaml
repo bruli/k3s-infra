@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-exporter
+  namespace: monitoring
+  labels:
+    app: nats-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: nats-exporter }
+  template:
+    metadata:
+      labels: { app: nats-exporter }
+    spec:
+      containers:
+        - name: exporter
+          image: natsio/prometheus-nats-exporter:latest
+          args:
+            - "-D"                      # logs de debug
+            - "-varz"
+            - "-connz"
+            - "-subz"
+            - "-a=0.0.0.0"             # bind explícit
+            - "-p=7777"                # port explícit
+            - "http://nats.nats.svc.cluster.local:8222"  # URL base
+          ports:
+            - name: metrics
+              containerPort: 7777
