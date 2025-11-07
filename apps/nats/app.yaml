@@ -12,12 +12,13 @@ spec:
     repoURL: https://nats-io.github.io/k8s/helm/charts
     chart: nats
     targetRevision: 2.12.1
-#     helm:
-#       releaseName: nats
-#       values: |
-#         nats:
-#           jetstream:
-#             enabled: true
+    helm:
+        values: |
+            config: |
+                port: 4222
+                http: 8222          # 👈 habilita /varz, /connz, /subsz
+                # (opcional) cluster:
+                # cluster: { port: 6222 }
   syncPolicy:
     automated:
       prune: true
