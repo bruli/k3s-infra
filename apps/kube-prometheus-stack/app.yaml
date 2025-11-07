@@ -11,7 +11,7 @@ spec:
     chart: kube-prometheus-stack
     targetRevision: 79.4.0
     helm:
-      skipCrds: false
+      skipCrds: true
       values: |
         prometheus-pushgateway:
           enabled: false
