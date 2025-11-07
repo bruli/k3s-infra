@@ -6,6 +6,11 @@ metadata:
   labels:
     app.kubernetes.io/part-of: monitoring
 spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
@@ -15,6 +20,18 @@ spec:
       values: |
         prometheus-pushgateway:
           enabled: false
+
+        nodeExporter:
+          tolerations:
+            - operator: "Exists"
+          hostNetwork: false
+          service:
+            hostPort: false
+
+        kube-state-metrics:
+          tolerations:
+            - operator: "Exists"
+
   syncPolicy:
     automated:
       prune: true
