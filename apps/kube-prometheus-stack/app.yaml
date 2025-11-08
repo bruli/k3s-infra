@@ -13,24 +13,13 @@ spec:
     chart: kube-prometheus-stack
     targetRevision: 79.4.0
     helm:
-      skipCrds: true
+      # IMPORTANT: que Argo instal·li els CRD també
+      skipCrds: false
       values: |
         prometheus-pushgateway:
           enabled: false
 
-        # (opcional) toleracions per si tens taints al control-plane
-        nodeExporter:
-          tolerations:
-            - operator: "Exists"
-          hostNetwork: false
-          service:
-            hostPort: false
-
-        kube-state-metrics:
-          tolerations:
-            - operator: "Exists"
-
-        # (opcional) arrencada sense PVC; canvia-ho a Longhorn quan vulgues persistència
+        # Opcional però útil per arrencar sense StorageClass
         prometheus:
           prometheusSpec:
             storageSpec:
@@ -41,9 +30,16 @@ spec:
             storage:
               emptyDir: {}
 
-  # Assegura ordre: primer CRDs, després aquest stack
-  dependsOn:
-    - kube-prometheus-stack-crds
+        nodeExporter:
+          tolerations:
+            - operator: "Exists"
+          hostNetwork: false
+          service:
+            hostPort: false
+
+        kube-state-metrics:
+          tolerations:
+            - operator: "Exists"
 
   syncPolicy:
     automated:
