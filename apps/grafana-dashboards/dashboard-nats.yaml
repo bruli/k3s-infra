@@ -907,12 +907,7 @@ data:
       "preload": false,
       "refresh": "10s",
       "schemaVersion": 40,
-      "tags": [
-        "nats",
-        "exporter",
-        "prometheus",
-        "k8s"
-      ],
+      "tags": ["nats"],
       "templating": {
         "list": [
           {
