@@ -1,8 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nats-exporter
+  name: prometheus
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: monitoring
 spec:
   project: default
   destination:
@@ -10,26 +12,37 @@ spec:
     namespace: monitoring
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus-nats-exporter
-    targetRevision: 2.20.0
+    chart: prometheus
+    targetRevision: 25.24.1
     helm:
       values: |
-        config:
-          nats:
-            service: nats-headless
-            namespace: nats
-            port: 8222
-          metrics:
-            accstatz: true
-            connz: true
-            connz_detailed: true
-            jsz: false
-            gatewayz: false
-            leafz: true
-            routez: true
-            subz: true
-            varz: true
+        server:
+          persistentVolume:
+            enabled: true
+            size: 20Gi
+            storageClass: longhorn
+
+          # 👇 Carrega arxius extra de scrape_configs
+          scrapeConfigFiles:
+            - nats-exporter.yml
+
+        alertmanager:
+          enabled: false
+        pushgateway:
+          enabled: false
+
+        # 👇 Contingut del fitxer extra
+        serverFiles:
+          nats-exporter.yml: |
+            - job_name: 'nats-exporter'
+              metrics_path: /metrics
+              static_configs:
+                - targets:
+                    - 'nats-exporter-prometheus-nats-exporter.monitoring.svc.cluster.local:7777'
   syncPolicy:
-    automated: { prune: true, selfHeal: true }
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
