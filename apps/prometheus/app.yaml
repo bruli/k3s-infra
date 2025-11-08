@@ -22,12 +22,18 @@ spec:
                 enabled: true
                 size: 20Gi
                 storageClass: longhorn
-        service:
-            type: ClusterIP
         alertmanager:
           enabled: false
         pushgateway:
           enabled: false
+        serverFiles:
+            prometheus.yml:
+                scrape_configs:
+                    - job_name: 'nats-exporter'
+                    static_configs:
+                        - targets:
+                            - 'nats-exporter-prometheus-nats-exporter.monitoring.svc.cluster.local:7777'
+
   syncPolicy:
     automated:
       prune: true

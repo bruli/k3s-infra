@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nats-exporter
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: prometheus-nats-exporter
+    targetRevision: 2.20.0
+    helm:
+      values: |
+        config:
+          nats:
+            service: nats-headless
+            namespace: nats
+            port: 8222
+          metrics:
+            accstatz: true
+            connz: true
+            connz_detailed: true
+            jsz: false
+            gatewayz: false
+            leafz: true
+            routez: true
+            subz: true
+            varz: true
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions:
+      - CreateNamespace=true
