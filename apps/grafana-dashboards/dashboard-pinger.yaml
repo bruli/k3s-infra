@@ -4,7 +4,7 @@ metadata:
   name: grafana-dashboard-pinger
   namespace: monitoring
   labels:
-    grafana_dashboard: "1"             # <- el sidecar de dashboards el recull per aquesta etiqueta
+    grafana_dashboard: "1"
 data:
   pinger-overview.json: |-
     {
