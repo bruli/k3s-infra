@@ -44,7 +44,7 @@ spec:
               metrics_path: /metrics
               static_configs:
                 - targets:
-                    - 'pinger-exporter.pinger-exporter.svc.cluster.local'
+                    - 'pinger-exporter.pinger-exporter.svc.cluster.local:80'
   syncPolicy:
     automated:
       prune: true
