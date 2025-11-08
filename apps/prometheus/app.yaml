@@ -25,6 +25,7 @@ spec:
           # 👇 Carrega arxius extra de scrape_configs
           scrapeConfigFiles:
             - nats-exporter.yml
+            - pinger-exporter.yml
 
         alertmanager:
           enabled: false
