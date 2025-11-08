@@ -39,6 +39,12 @@ spec:
               static_configs:
                 - targets:
                     - 'nats-exporter-prometheus-nats-exporter.monitoring.svc.cluster.local:7777'
+          pinger-exporter.yml: |
+            - job_name: 'pinger-exporter'
+              metrics_path: /metrics
+              static_configs:
+                - targets:
+                    - 'pinger-exporter.pinger-exporter.svc.cluster.local:8080'
   syncPolicy:
     automated:
       prune: true
