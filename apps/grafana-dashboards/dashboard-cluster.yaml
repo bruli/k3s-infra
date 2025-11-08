@@ -5,8 +5,6 @@ metadata:
   namespace: monitoring
   labels:
     grafana_dashboard: "1"             # <- el sidecar de dashboards el recull per aquesta etiqueta
-#   annotations:
-#     grafana_folder: "Provisioned"       # <- carpeta on apareixerà a Grafana (opcional)
 data:
   cluster-overview.json: |-
     {
@@ -1006,7 +1004,7 @@ data:
       "preload": false,
       "refresh": "",
       "schemaVersion": 40,
-      "tags": [],
+      "tags": ["k8s"],
       "templating": {
         "list": [
           {

@@ -5,3 +5,4 @@ resources:
     - dashboard-pinger.yaml
     - dashboard-cluster.yaml
     - dashboard-alerter.yaml
+    - dashboard-nats.yaml
