@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack-crds
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    # sense namespace: els CRD són cluster-scope
+  source:
+    repoURL: https://github.com/prometheus-community/helm-charts
+    targetRevision: main
+    path: charts/kube-prometheus-stack/crds
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - Replace=true
+      - PruneLastAppliedConfiguration=true

@@ -3,14 +3,11 @@ kind: Application
 metadata:
   name: kube-prometheus-stack
   namespace: argocd
-  labels:
-    app.kubernetes.io/part-of: monitoring
 spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
-
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
@@ -21,6 +18,7 @@ spec:
         prometheus-pushgateway:
           enabled: false
 
+        # (opcional) toleracions per si tens taints al control-plane
         nodeExporter:
           tolerations:
             - operator: "Exists"
@@ -31,6 +29,21 @@ spec:
         kube-state-metrics:
           tolerations:
             - operator: "Exists"
+
+        # (opcional) arrencada sense PVC; canvia-ho a Longhorn quan vulgues persistència
+        prometheus:
+          prometheusSpec:
+            storageSpec:
+              emptyDir: {}
+            retention: 10d
+        alertmanager:
+          alertmanagerSpec:
+            storage:
+              emptyDir: {}
+
+  # Assegura ordre: primer CRDs, després aquest stack
+  dependsOn:
+    - kube-prometheus-stack-crds
 
   syncPolicy:
     automated:
