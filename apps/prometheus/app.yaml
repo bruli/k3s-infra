@@ -28,7 +28,6 @@ spec:
               static_configs:
                 - targets:
                     - 'nats-exporter-prometheus-nats-exporter.monitoring.svc.cluster.local:7777'
-        
             - job_name: 'pinger-exporter'
               metrics_path: /metrics
               static_configs:
