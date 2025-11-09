@@ -6,3 +6,4 @@ resources:
     - dashboard-cluster.yaml
     - dashboard-alerter.yaml
     - dashboard-nats.yaml
+    - dashboard-pinger-exporter.yaml
