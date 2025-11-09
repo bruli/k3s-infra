@@ -22,30 +22,37 @@ spec:
             size: 20Gi
             storageClass: longhorn
 
-          # 👇 Carrega arxius extra de scrape_configs
-          scrapeConfigFiles:
-            - nats-exporter.yml
-            - pinger-exporter.yml
-
-        alertmanager:
-          enabled: false
-        pushgateway:
-          enabled: false
-
-        # 👇 Contingut del fitxer extra
-        serverFiles:
-          nats-exporter.yml: |
+          # 👇 Configs de scrape extra (més robust que scrapeConfigFiles)
+          extraScrapeConfigs:
+            # NATS exporter (estàtic)
             - job_name: 'nats-exporter'
               metrics_path: /metrics
               static_configs:
                 - targets:
                     - 'nats-exporter-prometheus-nats-exporter.monitoring.svc.cluster.local:7777'
-          pinger-exporter.yml: |
+
+            # Pinger exporter (dinàmic via K8s SD)
             - job_name: 'pinger-exporter'
+              kubernetes_sd_configs:
+                - role: endpoints
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_namespace]
+                  regex: pinger-exporter
+                  action: keep
+                - source_labels: [__meta_kubernetes_service_name]
+                  regex: pinger-exporter
+                  action: keep
+                # Filtra el port del Service (80 → targetPort 8080 al Pod)
+                - source_labels: [__meta_kubernetes_endpoint_port_number]
+                  regex: "80"
+                  action: keep
               metrics_path: /metrics
-              static_configs:
-                - targets:
-                    - 'pinger-exporter.pinger-exporter.svc.cluster.local:80'
+              scrape_interval: 15s
+
+        alertmanager:
+          enabled: false
+        pushgateway:
+          enabled: false
   syncPolicy:
     automated:
       prune: true
