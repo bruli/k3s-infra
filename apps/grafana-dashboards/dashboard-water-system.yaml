@@ -1,0 +1,360 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-water-system
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  water-system-overview.json: |-
+      {
+        "__inputs": [
+          {
+            "name": "DS_PROMETHEUS",
+            "label": "Prometheus",
+            "description": "",
+            "type": "datasource",
+            "pluginId": "prometheus",
+            "pluginName": "Prometheus"
+          }
+        ],
+        "__requires": [
+          {
+            "type": "grafana",
+            "id": "grafana",
+            "name": "Grafana",
+            "version": "10.0.0"
+          },
+          {
+            "type": "panel",
+            "id": "timeseries",
+            "name": "Time series",
+            "version": ""
+          },
+          {
+            "type": "panel",
+            "id": "stat",
+            "name": "Stat",
+            "version": ""
+          },
+          {
+            "type": "datasource",
+            "id": "prometheus",
+            "name": "Prometheus",
+            "version": "2.0.0"
+          }
+        ],
+        "id": null,
+        "uid": "watersystem-metrics",
+        "title": "WaterSystem – Process Metrics",
+        "tags": [
+          "waterSystem",
+          "bonsai",
+          "raspberry"
+        ],
+        "timezone": "browser",
+        "schemaVersion": 38,
+        "version": 1,
+        "refresh": "30s",
+        "style": "dark",
+        "time": {
+          "from": "now-6h",
+          "to": "now"
+        },
+        "timepicker": {
+          "refresh_intervals": [
+            "5s",
+            "10s",
+            "30s",
+            "1m",
+            "5m",
+            "15m",
+            "30m",
+            "1h"
+          ]
+        },
+        "templating": {
+          "list": []
+        },
+        "annotations": {
+          "list": [
+            {
+              "type": "dashboard",
+              "name": "Annotations & Alerts",
+              "enable": true,
+              "hide": true,
+              "builtIn": 1,
+              "iconColor": "rgba(0, 211, 255, 1)"
+            }
+          ]
+        },
+        "panels": [
+          {
+            "id": 1,
+            "type": "timeseries",
+            "title": "CPU – ús procés waterSystem (%)",
+            "datasource": "${DS_PROMETHEUS}",
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 0
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percent",
+                "min": 0,
+                "max": 100
+              },
+              "overrides": []
+            },
+            "options": {
+              "legend": {
+                "showLegend": true,
+                "displayMode": "list",
+                "placement": "bottom"
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "expr": "100 * rate(process_cpu_seconds_total{job=\"waterSystem\"}[$__rate_interval])",
+                "legendFormat": "CPU waterSystem",
+                "interval": ""
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "type": "timeseries",
+            "title": "Memòria resident – procés waterSystem",
+            "datasource": "${DS_PROMETHEUS}",
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 0
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "bytes",
+                "min": 0
+              },
+              "overrides": []
+            },
+            "options": {
+              "legend": {
+                "showLegend": true,
+                "displayMode": "list",
+                "placement": "bottom"
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "expr": "process_resident_memory_bytes{job=\"waterSystem\"}",
+                "legendFormat": "RSS waterSystem",
+                "interval": ""
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "type": "timeseries",
+            "title": "Xarxa – bytes rebuts (RX)",
+            "datasource": "${DS_PROMETHEUS}",
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 8
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "Bps",
+                "min": 0
+              },
+              "overrides": []
+            },
+            "options": {
+              "legend": {
+                "showLegend": true,
+                "displayMode": "list",
+                "placement": "bottom"
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "expr": "rate(process_network_receive_bytes_total{job=\"waterSystem\"}[$__rate_interval])",
+                "legendFormat": "RX waterSystem",
+                "interval": ""
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "type": "timeseries",
+            "title": "Xarxa – bytes enviats (TX)",
+            "datasource": "${DS_PROMETHEUS}",
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 8
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "Bps",
+                "min": 0
+              },
+              "overrides": []
+            },
+            "options": {
+              "legend": {
+                "showLegend": true,
+                "displayMode": "list",
+                "placement": "bottom"
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "expr": "rate(process_network_transmit_bytes_total{job=\"waterSystem\"}[$__rate_interval])",
+                "legendFormat": "TX waterSystem",
+                "interval": ""
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "type": "timeseries",
+            "title": "Goroutines",
+            "datasource": "${DS_PROMETHEUS}",
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 16
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "none",
+                "min": 0
+              },
+              "overrides": []
+            },
+            "options": {
+              "legend": {
+                "showLegend": true,
+                "displayMode": "list",
+                "placement": "bottom"
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "expr": "go_goroutines{job=\"waterSystem\"}",
+                "legendFormat": "goroutines",
+                "interval": ""
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "type": "timeseries",
+            "title": "Threads del sistema",
+            "datasource": "${DS_PROMETHEUS}",
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 16
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "none",
+                "min": 0
+              },
+              "overrides": []
+            },
+            "options": {
+              "legend": {
+                "showLegend": true,
+                "displayMode": "list",
+                "placement": "bottom"
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "expr": "go_threads{job=\"waterSystem\"}",
+                "legendFormat": "threads",
+                "interval": ""
+              }
+            ]
+          },
+          {
+            "id": 7,
+            "type": "timeseries",
+            "title": "Fitxers descriptors oberts (FDs)",
+            "datasource": "${DS_PROMETHEUS}",
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 16
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "none",
+                "min": 0
+              },
+              "overrides": []
+            },
+            "options": {
+              "legend": {
+                "showLegend": true,
+                "displayMode": "list",
+                "placement": "bottom"
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "refId": "A",
+                "expr": "process_open_fds{job=\"waterSystem\"}",
+                "legendFormat": "open_fds",
+                "interval": ""
+              }
+            ]
+          }
+        ]
+      }
