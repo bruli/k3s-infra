@@ -39,8 +39,7 @@ spec:
           enabled: true
           size: 10Gi
         backup:
-          enabled: true
-          size: 10Gi
+          enabled: false
 
   syncPolicy:
     automated:
