@@ -22,13 +22,13 @@ spec:
         persistence:
           enabled: true
           size: 10Gi
-          storageClass: local-path
+          storageClass: longhorn
 
         # si el chart separa data/backup, afegeix també això:
         backup:
           enabled: true
           size: 10Gi
-          storageClass: local-path
+          storageClass: longhorn
 
   syncPolicy:
     automated:
