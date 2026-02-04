@@ -25,10 +25,10 @@ spec:
           storageClassName: longhorn
 
         # si el chart separa data/backup, afegeix també això:
-        backup:
-          enabled: true
-          size: 10Gi
-          storageClassName: longhorn
+#         backup:
+#           enabled: true
+#           size: 10Gi
+#           storageClassName: longhorn
 
   syncPolicy:
     automated:
