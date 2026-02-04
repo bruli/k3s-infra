@@ -15,20 +15,32 @@ spec:
     targetRevision: 2.6.1
     helm:
       releaseName: unifi-controller
+      parameters:
+        - name: persistence.storageClass
+          value: longhorn
+        - name: persistence.storageClassName
+          value: longhorn
+        - name: persistence.data.storageClass
+          value: longhorn
+        - name: persistence.data.storageClassName
+          value: longhorn
+        - name: persistence.backup.storageClass
+          value: longhorn
+        - name: persistence.backup.storageClassName
+          value: longhorn
+        - name: backup.storageClass
+          value: longhorn
+        - name: backup.storageClassName
+          value: longhorn
       values: |
         service:
           type: ClusterIP
-
         persistence:
           enabled: true
           size: 10Gi
-          storageClass: longhorn
-
-        # si el chart separa data/backup, afegeix també això:
         backup:
           enabled: true
           size: 10Gi
-          storageClass: longhorn
 
   syncPolicy:
     automated:
