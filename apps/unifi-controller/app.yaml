@@ -5,7 +5,6 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
   destination:
     server: https://kubernetes.default.svc
     namespace: unifi
@@ -23,23 +22,13 @@ spec:
         persistence:
           enabled: true
           size: 10Gi
-          storageClassName: longhorn
+          storageClass: local-path
 
-        # Ports interns típics (no exposats fora del cluster)
-        ports:
-          https:
-            port: 8443
-          inform:
-            port: 8080
-          stun:
-            port: 3478
-
-        resources:
-          requests:
-            cpu: 100m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
+        # si el chart separa data/backup, afegeix també això:
+        backup:
+          enabled: true
+          size: 10Gi
+          storageClass: local-path
 
   syncPolicy:
     automated:
