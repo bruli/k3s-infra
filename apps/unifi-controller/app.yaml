@@ -32,6 +32,12 @@ spec:
           value: longhorn
         - name: backup.storageClassName
           value: longhorn
+        - name: backup.persistence.storageClass
+          value: longhorn
+        - name: backup.persistence.storageClassName
+          value: longhorn
+        - name: persistence.backupExistingClaim
+          value: ""
       values: |
         service:
           type: ClusterIP
@@ -39,7 +45,8 @@ spec:
           enabled: true
           size: 10Gi
         backup:
-          enabled: false
+          enabled: true
+          size: 10Gi
 
   syncPolicy:
     automated:
