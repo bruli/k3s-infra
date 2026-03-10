@@ -1,0 +1,65 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: home-assistant
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: home-assistant
+  source:
+    repoURL: http://pajikos.github.io/home-assistant-helm-chart/
+    chart: home-assistant
+    targetRevision: 0.3.47
+    helm:
+      releaseName: home-assistant
+      valuesObject:
+        controller:
+          type: StatefulSet
+
+        persistence:
+          enabled: true
+          size: 10Gi
+          accessMode: ReadWriteOnce
+          storageClass: longhorn
+
+        ingress:
+          enabled: true
+          hosts:
+            - host: ha.bru-li.me
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: home-assistant-tls
+              hosts:
+                - ha.bru-li.me
+
+        configuration:
+          enabled: true
+          trusted_proxies:
+            - 10.42.0.0/16
+            - 10.43.0.0/16
+          templateConfig: |-
+            default_config:
+
+            http:
+              use_x_forwarded_for: true
+              trusted_proxies:
+                - 10.42.0.0/16
+                - 10.43.0.0/16
+
+            frontend:
+              themes: !include_dir_merge_named themes
+
+            automation: !include automations.yaml
+            script: !include scripts.yaml
+            scene: !include scenes.yaml
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
