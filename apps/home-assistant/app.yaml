@@ -36,6 +36,17 @@ spec:
               hosts:
                 - ha.bru-li.me
 
+        additionalVolumes:
+          - name: ha-secrets
+            secret:
+              secretName: home-assistant-secrets
+
+        additionalMounts:
+          - name: ha-secrets
+            mountPath: /config/secrets.yaml
+            subPath: secrets.yaml
+            readOnly: true
+
         configuration:
           enabled: true
           trusted_proxies:
@@ -52,6 +63,15 @@ spec:
 
             frontend:
               themes: !include_dir_merge_named themes
+
+            rest_command:
+              irrigate_bonsai_big:
+                url: "http://192.168.1.10:8080/zones/bb/execute"
+                method: POST
+                headers:
+                  Authorization: !secret irrigation_api_authorization
+                content_type: "application/json"
+                payload: '{"seconds": 15}'
 
             automation: !include automations.yaml
             script: !include scripts.yaml
