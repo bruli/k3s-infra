@@ -73,6 +73,13 @@ spec:
                   Authorization: !secret irrigation_api_authorization
                 content_type: "application/json"
                 payload: '{"seconds": 15}'
+              irrigate_bonsai_small:
+                url: "http://192.168.1.10:8080/zones/bs/execute"
+                method: POST
+                headers:
+                  Authorization: !secret irrigation_api_authorization
+                content_type: "application/json"
+                payload: '{"seconds": 10}'
 
             automation: !include automations.yaml
             script: !include scripts.yaml
