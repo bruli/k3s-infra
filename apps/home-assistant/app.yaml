@@ -70,10 +70,10 @@ spec:
                   - name: "Bonsai Big Roots Active"
                     unique_id: bonsai_big_roots_active
                     availability: >
-                      {{ states('sensor.bonsai_big_soil_temperature') not in ['unknown', 'unavailable', 'none'] }}
+                      {{ "{{ states('sensor.bonsai_big_soil_temperature') not in ['unknown', 'unavailable', 'none'] }}" }}
                     state: >
-                      {% set t = states('sensor.bonsai_big_soil_temperature') | float %}
-                      {{ 5 <= t <= 30 }}
+                      {{ "{% set t = states('sensor.bonsai_big_soil_temperature') | float %}" }}
+                      {{ "{{ 5 <= t <= 30 }}" }}
 
             recorder:
               purge_keep_days: 365
