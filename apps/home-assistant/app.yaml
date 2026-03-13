@@ -65,11 +65,23 @@ spec:
             frontend:
               themes: !include_dir_merge_named themes
 
+            template:
+              - binary_sensor:
+                  - name: "Bonsai Big Roots Active"
+                    unique_id: bonsai_big_roots_active
+                    availability: >
+                      {{ states('sensor.bonsai_big_soil_temperature') not in ['unknown', 'unavailable', 'none'] }}
+                    state: >
+                      {% set t = states('sensor.bonsai_big_soil_temperature') | float %}
+                      {{ 5 <= t <= 30 }}
+
             recorder:
               purge_keep_days: 365
               include:
                 entity_globs:
                   - sensor.bonsai_*
+                  - binary_sensor.bonsai_*
+
             rest_command:
               irrigate_bonsai_big:
                 url: "http://192.168.1.10:8080/zones/bb/execute"
