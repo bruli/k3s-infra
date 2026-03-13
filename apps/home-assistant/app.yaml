@@ -65,6 +65,11 @@ spec:
             frontend:
               themes: !include_dir_merge_named themes
 
+            recorder:
+              purge_keep_days: 365
+              include:
+                entity_globs:
+                  - sensor.bonsai_*
             rest_command:
               irrigate_bonsai_big:
                 url: "http://192.168.1.10:8080/zones/bb/execute"
