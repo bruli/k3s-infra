@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: influxdb
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://helm.influxdata.com/
+    chart: influxdb2
+    targetRevision: 2.1.2
+    helm:
+      releaseName: influxdb
+      values: |
+        image:
+          repository: influxdb
+          tag: 2.7.4
+
+        adminUser:
+          organization: home
+          bucket: homeassistant
+          user: admin
+          retention_policy: 30d
+          existingSecret: influxdb-auth
+
+        persistence:
+          enabled: true
+          size: 20Gi
+          storageClass: longhorn
+
+        service:
+          type: ClusterIP
+          port: 80
+
+        ingress:
+          enabled: false
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: influxdb
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
