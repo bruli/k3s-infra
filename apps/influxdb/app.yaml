@@ -13,10 +13,6 @@ spec:
     helm:
       releaseName: influxdb
       values: |
-        image:
-          repository: influxdb
-          tag: 2.7.4
-
         adminUser:
           organization: home
           bucket: homeassistant
