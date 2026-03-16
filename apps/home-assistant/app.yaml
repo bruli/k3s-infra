@@ -81,15 +81,6 @@ spec:
                 entity_globs:
                   - sensor.bonsai_*
                   - binary_sensor.bonsai_*
-            influxdb:
-                api_version: 2
-                host: influxdb.influxdb.svc.cluster.local
-                port: 8086
-                ssl: false
-                organization: home
-                bucket: homeassistant
-                token: !secret influxdb_token
-                default_measurement: state
             rest_command:
               irrigate_bonsai_big:
                 url: "http://192.168.1.10:8080/zones/bb/execute"
