@@ -91,14 +91,16 @@ spec:
                 sensor:
                   - name: "Bonsai Ambient Temperature"
                     unique_id: bonsai_ambient_temperature
-                    value_template: "{{ value_json.temperature }}"
+                    value_template: >
+                      {{ "{{ value_json.temperature }}" }}
                     unit_of_measurement: "°C"
                     device_class: temperature
                     state_class: measurement
                 binary_sensor:
                   - name: "Bonsai Rain"
                     unique_id: bonsai_rain
-                    value_template: "{{ value_json.is_raining }}"
+                    value_template: >
+                      {{ "{{ value_json.is_raining }}" }}
                     device_class: moisture
             rest_command:
               irrigate_bonsai_big:
