@@ -5,11 +5,9 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
   destination:
     server: https://kubernetes.default.svc
     namespace: nats
-
   source:
     repoURL: https://nats-io.github.io/k8s/helm/charts
     chart: nats
@@ -21,8 +19,8 @@ spec:
             enabled: true
             replicas: 3
             routeURLs:
-              user: << $NATS_USER >>
-              password: << $NATS_PASSWORD >>
+              user: raspberry
+              password: P5=bAw294IX8
 
           jetstream:
             enabled: true
@@ -41,24 +39,14 @@ spec:
           merge:
             authorization:
               users:
-                - user: << $NATS_USER >>
-                  password: << $NATS_PASSWORD >>
-
-        container:
-          env:
-            NATS_USER:
-              valueFrom:
-                secretKeyRef:
-                  name: nats-auth
-                  key: NATS_USER
-            NATS_PASSWORD:
-              valueFrom:
-                secretKeyRef:
-                  name: nats-auth
-                  key: NATS_PASSWORD
+                - user: raspberry
+                  password: P5=bAw294IX8
 
         reloader:
           enabled: false
+
+        podTemplate:
+          configChecksumAnnotation: true
 
         service:
           merge:
@@ -80,20 +68,8 @@ spec:
           contexts:
             default:
               merge:
-                user: << $NATS_USER >>
-                password: << $NATS_PASSWORD >>
-          container:
-            env:
-              NATS_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: nats-auth
-                    key: NATS_USER
-              NATS_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: nats-auth
-                    key: NATS_PASSWORD
+                user: raspberry
+                password: P5=bAw294IX8
 
   syncPolicy:
     automated:
