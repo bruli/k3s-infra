@@ -46,9 +46,17 @@ spec:
 
         container:
           merge:
-            envFrom:
-              - secretRef:
-                  name: nats-auth
+            env:
+              - name: NATS_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: nats-auth
+                    key: NATS_USER
+              - name: NATS_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: nats-auth
+                    key: NATS_PASSWORD
 
         reloader:
           enabled: false
@@ -77,9 +85,17 @@ spec:
                 password: << $NATS_PASSWORD >>
           container:
             merge:
-              envFrom:
-                - secretRef:
-                    name: nats-auth
+              env:
+                - name: NATS_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: nats-auth
+                      key: NATS_USER
+                - name: NATS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: nats-auth
+                      key: NATS_PASSWORD
 
   syncPolicy:
     automated:
