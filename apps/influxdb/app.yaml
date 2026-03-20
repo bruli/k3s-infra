@@ -15,7 +15,7 @@ spec:
       values: |
         adminUser:
           organization: home
-          bucket: homeassistant
+          bucket: bonsai-data
           user: admin
           retention_policy: 30d
           existingSecret: influxdb-auth
