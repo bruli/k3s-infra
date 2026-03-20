@@ -45,7 +45,6 @@ spec:
                   password: << $NATS_PASSWORD >>
 
         container:
-          merge:
             env:
               - name: NATS_USER
                 valueFrom:
@@ -84,7 +83,6 @@ spec:
                 user: << $NATS_USER >>
                 password: << $NATS_PASSWORD >>
           container:
-            merge:
               env:
                 - name: NATS_USER
                   valueFrom:
