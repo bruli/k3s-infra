@@ -45,17 +45,17 @@ spec:
                   password: << $NATS_PASSWORD >>
 
         container:
-            env:
-              - name: NATS_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: nats-auth
-                    key: NATS_USER
-              - name: NATS_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: nats-auth
-                    key: NATS_PASSWORD
+          env:
+            NATS_USER:
+              valueFrom:
+                secretKeyRef:
+                  name: nats-auth
+                  key: NATS_USER
+            NATS_PASSWORD:
+              valueFrom:
+                secretKeyRef:
+                  name: nats-auth
+                  key: NATS_PASSWORD
 
         reloader:
           enabled: false
@@ -83,17 +83,17 @@ spec:
                 user: << $NATS_USER >>
                 password: << $NATS_PASSWORD >>
           container:
-              env:
-                - name: NATS_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: nats-auth
-                      key: NATS_USER
-                - name: NATS_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: nats-auth
-                      key: NATS_PASSWORD
+            env:
+              NATS_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: nats-auth
+                    key: NATS_USER
+              NATS_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: nats-auth
+                    key: NATS_PASSWORD
 
   syncPolicy:
     automated:
