@@ -75,33 +75,6 @@ spec:
                       {{ "{% set t = states('sensor.bonsai_big_soil_temperature') | float %}" }}
                       {{ "{{ 5 <= t <= 30 }}" }}
 
-            recorder:
-              purge_keep_days: 365
-              include:
-                entity_globs:
-                  - sensor.bonsai_*
-                  - binary_sensor.bonsai_*
-
-            rest:
-              - resource: "http://192.168.1.10:8080/weather"
-                scan_interval: 86400
-                timeout: 10
-                headers:
-                  Authorization: !secret irrigation_api_authorization
-                sensor:
-                  - name: "Bonsai Ambient Temperature"
-                    unique_id: bonsai_ambient_temperature
-                    value_template: >
-                      {{ "{{ value_json.temperature }}" }}
-                    unit_of_measurement: "°C"
-                    device_class: temperature
-                    state_class: measurement
-                binary_sensor:
-                  - name: "Bonsai Rain"
-                    unique_id: bonsai_rain
-                    value_template: >
-                      {{ "{{ value_json.is_raining }}" }}
-                    device_class: moisture
             rest_command:
               irrigate_bonsai_big:
                 url: "http://192.168.1.10:8080/zones/bb/execute"
