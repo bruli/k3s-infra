@@ -87,3 +87,9 @@ spec:
           - name: runlogjournal
             mountPath: /run/log/journal
             readOnly: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
