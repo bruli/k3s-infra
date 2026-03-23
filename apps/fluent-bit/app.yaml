@@ -65,7 +65,7 @@ spec:
                 Labels job=fluent-bit, cluster=k3s, namespace=$kubernetes['namespace_name'], pod=$kubernetes['pod_name'], container=$kubernetes['container_name']
                 label_keys level,service,subject,zone
                 remove_keys stream
-                LineFormat json
+                line_format json
 
         daemonSetVolumes:
           - name: varlog
