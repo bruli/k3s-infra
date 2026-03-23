@@ -7,7 +7,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: logging
+    namespace: monitoring
   source:
     repoURL: https://fluent.github.io/helm-charts
     chart: fluent-bit
@@ -87,9 +87,3 @@ spec:
           - name: runlogjournal
             mountPath: /run/log/journal
             readOnly: true
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
