@@ -62,8 +62,7 @@ spec:
                 Match kube.*
                 Host loki-gateway.monitoring.svc.cluster.local
                 Port 80
-                Labels job=fluent-bit,cluster=k3s,namespace=$kubernetes['namespace_name'],pod=$kubernetes['pod_name'],container=$kubernetes['container_name']
-                label_keys $service,$subject,$zone
+                Labels job=fluent-bit,cluster=k3s,namespace=$kubernetes['namespace_name'],pod=$kubernetes['pod_name'],container=$kubernetes['container_name'],service=$service
                 remove_keys stream
                 line_format json
 
