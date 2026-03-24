@@ -23,6 +23,20 @@ spec:
 
         fullnameOverride: otel-collector
 
+        presets:
+          logsCollection:
+            enabled: false
+          hostMetrics:
+            enabled: false
+          kubeletMetrics:
+            enabled: false
+          kubernetesAttributes:
+            enabled: false
+          clusterMetrics:
+            enabled: false
+          kubernetesEvents:
+            enabled: false
+
         config:
           receivers:
             otlp:
