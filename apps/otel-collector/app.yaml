@@ -1,0 +1,76 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: otel-collector
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+
+  source:
+    repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+    chart: opentelemetry-collector
+    targetRevision: 0.128.0
+    helm:
+      values: |
+        mode: deployment
+        replicaCount: 1
+
+        image:
+          repository: otel/opentelemetry-collector-k8s
+
+        fullnameOverride: otel-collector
+
+        presets:
+          kubernetesAttributes:
+            enabled: true
+
+        config:
+          receivers:
+            otlp:
+              protocols:
+                grpc:
+                  endpoint: 0.0.0.0:4317
+                http:
+                  endpoint: 0.0.0.0:4318
+
+          processors:
+            memory_limiter:
+              check_interval: 1s
+              limit_mib: 256
+            batch:
+            k8sattributes:
+              auth_type: serviceAccount
+              extract:
+                metadata:
+                  - k8s.namespace.name
+                  - k8s.pod.name
+                  - k8s.deployment.name
+                  - k8s.node.name
+
+          exporters:
+            otlp/tempo:
+              endpoint: tempo-distributor.observability.svc.cluster.local:4317
+              tls:
+                insecure: true
+            debug:
+              verbosity: basic
+
+          service:
+            pipelines:
+              traces:
+                receivers: [otlp]
+                processors: [memory_limiter, k8sattributes, batch]
+                exporters: [otlp/tempo, debug]
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
