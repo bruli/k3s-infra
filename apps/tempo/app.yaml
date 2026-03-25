@@ -32,6 +32,8 @@ spec:
 
         ingester:
           replicas: 1
+          config:
+            replication_factor: 1
 
         querier:
           replicas: 1
