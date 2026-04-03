@@ -70,6 +70,7 @@ spec:
             scene: !include scenes.yaml
 
             influxdb:
+              measurement_attr: entity_id
               include:
                 entity_globs:
                   - sensor.bonsai_*_soil_moisture
