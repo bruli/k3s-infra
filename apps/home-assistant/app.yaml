@@ -71,6 +71,11 @@ spec:
 
             influxdb:
               measurement_attr: entity_id
+              tags:
+                  source: home_assistant
+                tags_attributes:
+                  - friendly_name
+                  - unit_of_measurement
               include:
                 entity_globs:
                   - sensor.bonsai_*_soil_moisture
