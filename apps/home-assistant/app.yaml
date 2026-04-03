@@ -65,35 +65,15 @@ spec:
             frontend:
               themes: !include_dir_merge_named themes
 
-            template:
-              - binary_sensor:
-                  - name: "Bonsai Big Roots Active"
-                    unique_id: bonsai_big_roots_active
-                    availability: >
-                      {{ "{{ states('sensor.bonsai_big_soil_temperature') not in ['unknown', 'unavailable', 'none'] }}" }}
-                    state: >
-                      {{ "{% set t = states('sensor.bonsai_big_soil_temperature') | float %}" }}
-                      {{ "{{ 5 <= t <= 30 }}" }}
-
-            rest_command:
-              irrigate_bonsai_big:
-                url: "http://192.168.1.10:8080/zones/bb/execute"
-                method: POST
-                headers:
-                  Authorization: !secret irrigation_api_authorization
-                content_type: "application/json"
-                payload: '{"seconds": 15}'
-              irrigate_bonsai_small:
-                url: "http://192.168.1.10:8080/zones/bs/execute"
-                method: POST
-                headers:
-                  Authorization: !secret irrigation_api_authorization
-                content_type: "application/json"
-                payload: '{"seconds": 10}'
-
             automation: !include automations.yaml
             script: !include scripts.yaml
             scene: !include scenes.yaml
+
+            influxdb:
+              include:
+                entity_globs:
+                  - sensor.bonsai_*_soil_moisture
+                  - sensor.bonsai_*_substrate_temperature
 
   syncPolicy:
     automated:
