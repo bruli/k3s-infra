@@ -79,7 +79,7 @@ spec:
               include:
                 entity_globs:
                   - sensor.bonsai_*_soil_moisture
-                  - sensor.bonsai_*_substrate_temperature
+                  - sensor.bonsai_*_soil_temperature
 
   syncPolicy:
     automated:
