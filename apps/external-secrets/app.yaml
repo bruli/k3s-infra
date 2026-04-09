@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://charts.external-secrets.io
     chart: external-secrets
-    targetRevision: 0.9.20  
+    targetRevision: 2.2.0
     helm:
       values: |
         installCRDs: true
@@ -24,9 +24,9 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
 
   ignoreDifferences:
-    # ExternalSecret CRD
     - group: apiextensions.k8s.io
       kind: CustomResourceDefinition
       name: externalsecrets.external-secrets.io
@@ -37,7 +37,6 @@ spec:
         - .metadata.managedFields
         - .spec.conversion.webhook.clientConfig.caBundle
 
-    # SecretStore CRD
     - group: apiextensions.k8s.io
       kind: CustomResourceDefinition
       name: secretstores.external-secrets.io
@@ -48,7 +47,6 @@ spec:
         - .metadata.managedFields
         - .spec.conversion.webhook.clientConfig.caBundle
 
-    # ClusterSecretStore CRD
     - group: apiextensions.k8s.io
       kind: CustomResourceDefinition
       name: clustersecretstores.external-secrets.io
