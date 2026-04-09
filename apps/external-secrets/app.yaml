@@ -5,33 +5,56 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: external-secrets
+
   source:
     repoURL: https://charts.external-secrets.io
     chart: external-secrets
-    targetRevision: 0.20.4
+    targetRevision: 0.9.20  
     helm:
       values: |
         installCRDs: true
-        certController:
-          create: false
-  spec:
-    ignoreDifferences:
-      - group: apiextensions.k8s.io
-        kind: CustomResourceDefinition
-        jsonPointers:
-          - /status
-      - group: apiextensions.k8s.io
-        kind: CustomResourceDefinition
-        jqPathExpressions:
-          - .metadata.annotations
-          - .metadata.managedFields
-          - .spec.conversion.webhook.clientConfig.caBundle
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-secrets
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
+  ignoreDifferences:
+    # ExternalSecret CRD
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: externalsecrets.external-secrets.io
+      jsonPointers:
+        - /status
+      jqPathExpressions:
+        - .metadata.annotations
+        - .metadata.managedFields
+        - .spec.conversion.webhook.clientConfig.caBundle
+
+    # SecretStore CRD
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: secretstores.external-secrets.io
+      jsonPointers:
+        - /status
+      jqPathExpressions:
+        - .metadata.annotations
+        - .metadata.managedFields
+        - .spec.conversion.webhook.clientConfig.caBundle
+
+    # ClusterSecretStore CRD
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: clustersecretstores.external-secrets.io
+      jsonPointers:
+        - /status
+      jqPathExpressions:
+        - .metadata.annotations
+        - .metadata.managedFields
+        - .spec.conversion.webhook.clientConfig.caBundle
