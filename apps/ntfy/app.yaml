@@ -12,29 +12,25 @@ spec:
     targetRevision: 0.1.0
     helm:
       values: |
-        service:
-          type: NodePort
-          ports:
-            http:
-              port: 80
-              nodePort: 30880
+        image:
+          tag: "v2.22.0"
 
-        ingress:
-          enabled: false
+        ntfy:
+          baseUrl: "http://192.168.1.19:30880"
+          authDefaultAccess: "read-write"
+          behindProxy: false
 
         persistence:
           enabled: true
+          size: 2Gi
           storageClass: longhorn
-          size: 1Gi
 
-        ntfy:
-          config:
-            base-url: "http://192.168.1.19:30880"
-            behind-proxy: false
-            enable-login: true
-            enable-signup: false
-            cache-file: "/var/cache/ntfy/cache.db"
-            attachment-cache-dir: "/var/cache/ntfy/attachments"
+        service:
+          type: NodePort
+          port: 80
+
+        ingress:
+          enabled: false
 
   destination:
     server: https://kubernetes.default.svc
