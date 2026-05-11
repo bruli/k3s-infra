@@ -16,9 +16,13 @@ spec:
           tag: "v2.22.0"
 
         ntfy:
-          baseUrl: "http://192.168.1.19:30880"
-          authDefaultAccess: "read-write"
-          behindProxy: false
+          baseUrl: "https://ntfy.bru-li.me"
+          authDefaultAccess: "deny-all"
+          behindProxy: true
+          extraConfig: |
+            auth-file: /var/cache/ntfy/user.db
+            cache-file: /var/cache/ntfy/cache.db
+            attachment-cache-dir: /var/cache/ntfy/attachments
 
         persistence:
           enabled: true
@@ -26,11 +30,18 @@ spec:
           storageClass: longhorn
 
         service:
-          type: NodePort
+          type: ClusterIP
           port: 80
 
         ingress:
-          enabled: false
+          enabled: true
+          ingressClassName: cloudflare
+          hosts:
+            - host: ntfy.bru-li.me
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls: []
 
   destination:
     server: https://kubernetes.default.svc
