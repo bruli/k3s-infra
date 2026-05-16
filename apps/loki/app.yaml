@@ -64,6 +64,9 @@ spec:
 
         gateway:
           enabled: true
+          service:
+              type: NodePort
+              nodePort: 31000
 
   syncPolicy:
     automated:
