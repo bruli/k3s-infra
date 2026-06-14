@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/bruli/k3s-infra.git
     targetRevision: main
-    path: apps/postgresql
+    path: apps/postgresql/manifests
 
   destination:
     server: https://kubernetes.default.svc
